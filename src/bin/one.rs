@@ -1,4 +1,32 @@
 use std::io::{self,Read};
+use itertools::Itertools;
+
+#[allow(dead_code)]
+fn part1(input: &[i32]) {
+    let is_bigger = input.iter()
+        .tuple_windows()
+        .filter(|(prev,current)| current > prev);
+
+    let larger_count = is_bigger.count();
+
+    println!("{}", larger_count);
+}
+
+fn part2(input: &[i32]) {
+
+    let sums = input.iter()
+        .tuple_windows()
+        .map(|(prev, current, next)| next + current + prev)
+        .collect::<Vec<i32>>();
+    
+    let is_bigger = sums.iter()
+        .tuple_windows()
+        .filter(|(prev, current)| current > prev);
+
+    let larger_count = is_bigger.count();
+
+    println!("{}", larger_count);
+}
 
 fn main() -> Result<(), anyhow::Error> {
     let stdin = io::stdin();
@@ -13,16 +41,7 @@ fn main() -> Result<(), anyhow::Error> {
 	.map(|s| s.parse())
 	.collect::<Result<Vec<i32>,_>>()?;
     
-    let prevs = input.iter();
-
-    let is_bigger = input.iter()
-	.skip(1)
-	.zip(prevs)
-        .map(|(current,prev)| current > prev);
-
-    let larger_count = is_bigger.filter(|i| *i).count();
-
-    println!("{}", larger_count);
+    part2(&input);
     
     Ok(())
 }
