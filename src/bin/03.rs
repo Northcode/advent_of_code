@@ -1,6 +1,5 @@
 use std::io::{self, Read};
 use std::cmp::Ordering;
-use itertools::Itertools;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -10,12 +9,6 @@ enum MainError {
 
     #[error("no oxygen")]
     NoOxygenRating,
-
-    #[error("no co2")]
-    NoCO2Rating,
-
-    #[error("could not parse {0} as binary number")]
-    InvalidBinary(String),
 }
 
 fn main() -> Result<(), anyhow::Error> {
@@ -73,13 +66,8 @@ fn main() -> Result<(), anyhow::Error> {
 
     println!("{}", power);
 
-    let mut oxygen_candidates = input.clone();
-    let mut co2_candidates = input.clone();
-
-    let mut oxygen_rating_str = String::new();
-
-    fn get_rating(from: &Vec<String>, bit: char) -> Option<String> {
-	let mut candidates = from.clone();
+    fn get_rating(from: &[String], bit: char) -> Option<String> {
+	let mut candidates = from.to_owned();
 
 	let code_length = candidates[0].len();
 	
@@ -109,7 +97,7 @@ fn main() -> Result<(), anyhow::Error> {
 		return Some(candidates[0].clone());
 	    }
 	}
-	return None;
+	None
     }
 
     let oxygen_rating_str = get_rating(&input, '1').ok_or(MainError::NoOxygenRating)?;

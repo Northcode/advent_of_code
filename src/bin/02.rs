@@ -1,5 +1,4 @@
 use std::io::{self, Read};
-use itertools::Itertools;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -23,7 +22,7 @@ fn parse_command(s: impl AsRef<str>) -> Result<(String,i32), anyhow::Error> {
     let direction = parts.next().ok_or(CommandParseError::NoDirection)?.to_string();
     let amount = parts.next().ok_or(CommandParseError::NoAmount)?.parse()?;
     
-    return Ok((direction, amount));
+    Ok((direction, amount))
 }
 
 #[derive(Debug)]
