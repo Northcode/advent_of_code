@@ -23,6 +23,24 @@ fn find_num(board: &Board, num: i32) -> Option<usize> {
     board.data.iter().position(|&x| x == num)
 }
 
+trait OptExt
+{
+    fn some_if<F>(self, f: F) -> Option<Self>
+    where F: Fn(&Self) -> bool
+    , Self: Sized {
+	if f(&self) {
+	    Some(self)
+	} else {
+	    None
+	}
+    }
+}
+
+impl<T> OptExt for T where T : Sized {
+}
+
+
+
 fn find_bingo(board: &Board) -> Option<Vec<i32>> {
     let horizontal = board.marked.iter()
 	.enumerate()
@@ -30,11 +48,7 @@ fn find_bingo(board: &Board) -> Option<Vec<i32>> {
 	.into_iter()
         .find_map(|l| {
 	    let v = l.filter(|(_,&b)| b).collect_vec();
-	    if v.len() == 5 {
-		Some(v)
-	    } else {
-		None
-	    }
+	    v.some_if(|v| v.len() == 5)
 	});
 
     let vertical = (0..5).into_iter()
