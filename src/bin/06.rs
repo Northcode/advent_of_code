@@ -4,12 +4,6 @@ use thiserror::*;
 
 #[derive(Error,Debug)]
 enum MainError {
-    #[error("invalid point")]
-    InvalidLine,
-    
-    #[error("invalid point")]
-    InvalidPoint,
-
     #[error("no input")]
     NoInput,
 }
@@ -23,8 +17,7 @@ fn main() -> Result<(), anyhow::Error> {
     let fish = input_str
 	.lines()
 	.map(|s| s.trim())
-        .filter(|s| !s.is_empty())
-        .next()
+        .find(|s| !s.is_empty())
         .ok_or(MainError::NoInput)?
         .split(',')
         .map(|s| s.parse::<i32>())
@@ -33,9 +26,8 @@ fn main() -> Result<(), anyhow::Error> {
     let mut generations = vec![0, 1, 0, 0, 0, 0, 0, 0, 0];
 
     let days : usize = std::env::args()
-	.skip(1)
-	.next()
-	.unwrap_or("256".to_string())
+	.nth(1)
+	.unwrap_or_else(|| "256".to_string())
 	.parse()?;
 
     let counts = (0..days).
