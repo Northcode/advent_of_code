@@ -59,7 +59,7 @@ fn main() -> Result<(), anyhow::Error> {
         .filter(|s| !s.is_empty())
 	.collect_vec();
 
-    if input.len() == 0 { Err(MainError::NoInput)?; }
+    if input.is_empty() { return Err(MainError::NoInput.into()); }
 
     let map_width = input[0].len();
     let map_height = input.len();
@@ -76,7 +76,7 @@ fn main() -> Result<(), anyhow::Error> {
 
     print_map((map_width,map_height), &map);
 
-    let lowest_points = map.iter().enumerate().filter(|(i,n)| is_local_min(*i, dims, &map)).collect_vec();
+    let lowest_points = map.iter().enumerate().filter(|(i,_)| is_local_min(*i, dims, &map)).collect_vec();
 
     println!("{:?}", lowest_points);
 

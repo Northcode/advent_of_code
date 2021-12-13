@@ -27,6 +27,7 @@ fn parse_point(s: &str) -> Result<(i32,i32), anyhow::Error> {
     Ok((x_coord?, y_coord?))
 }
 
+#[allow(clippy::collapsible_else_if)]
 fn points_between(from: (i32,i32), to: (i32,i32)) -> Option<Vec<(i32,i32)>> {
 
     let diff_x = (from.0 - to.0).abs();

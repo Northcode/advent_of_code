@@ -74,8 +74,8 @@ fn main() -> Result<(), anyhow::Error> {
         .map(|s| parse_instruction(s))
         .collect::<Result<Vec<_>,_>>()?;
 
-    if sheet.len() == 0 { Err(MainError::NoInput)?; }
-    if instructions.len() == 0 { Err(MainError::NoInput)?; }
+    if sheet.is_empty() { return Err(MainError::NoInput.into()); }
+    if instructions.is_empty() { return Err(MainError::NoInput.into()); }
 
     let dims = (1 + *sheet.iter().map(|(x,_)| x).max().expect("no sheet max x") as usize,
 		1 + *sheet.iter().map(|(_,y)| y).max().expect("no sheet max y") as usize);
@@ -88,18 +88,18 @@ fn main() -> Result<(), anyhow::Error> {
 
     println!();
 
-    let mut tmp_dims = dims.clone();
-    let mut tmp_sheet = sheet.clone();
+    let mut tmp_dims = dims;
+    let mut tmp_sheet = sheet;
 
     for instruction in instructions.iter() {
 	if instruction.axis == 'x' {
-	    for (x,y) in &mut tmp_sheet {
+	    for (x,_) in &mut tmp_sheet {
 		*x = instruction.idx - (*x as i32 - instruction.idx as i32).abs() as usize;
 	    }
 	    tmp_dims.0 = tmp_dims.0 - instruction.idx - 1;
 	}
 	else if instruction.axis == 'y' {
-	    for (x,y) in &mut tmp_sheet {
+	    for (_,y) in &mut tmp_sheet {
 		*y = instruction.idx - (*y as i32 - instruction.idx as i32).abs() as usize;
 	    }
 	    tmp_dims.1 = tmp_dims.1 - instruction.idx - 1;
